@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>发送请求的网页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h2>发送请求</h2>
+    <form id="requestForm">
+        <label for="url">网站URL:</label>
+        <input type="text" id="url" name="url" required><br>
+
+        <label for="method">请求方式:</label>
+        <select id="method" name="method">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+        </select><br>
+
+        <label for="content">请求内容:</label><br>
+        <textarea id="content" name="content" rows="4" cols="50"></textarea><br>
+
+        <input type="submit" value="提交">
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById("requestForm").onsubmit = function (event) {
+            event.preventDefault();
+            const url = document.getElementById("url").value;
+            const method = document.getElementById("method").value;
+            const content = document.getElementById("content").value;
+            const xhttp = new XMLHttpRequest();
+            
+            // Record the request start time
+            const startTime = Date.now();
+
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    const endTime = Date.now();
+                    const elapsedTime = (endTime - startTime) / 1000;
+                    const responseDiv = document.getElementById("response");
+                    responseDiv.innerHTML = `请求成功，用时${elapsedTime}秒。<br><br>`;
+                    responseDiv.innerHTML += `响应内容：<br>${this.responseText}`;
+                }
+            };
+            xhttp.open(method, url, true);
+            if (method === "POST") {
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            }
+            xhttp.send(content);
+        };
+    </script>
+</body>
+</html>
